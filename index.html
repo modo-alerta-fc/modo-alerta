@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MODO ALERTA — Você consegue identificar um golpe?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+
+  <!-- TELA 1: SPLASH -->
+  <div id="screen-splash" class="screen active">
+    <div class="splash-bg">
+      <div class="grid-overlay"></div>
+      <div class="particles" id="particles"></div>
+    </div>
+    <div class="splash-content">
+      <div class="logo-wrapper">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="6"/>
+            <circle cx="12" cy="12" r="2"/>
+            <line x1="22" y1="12" x2="18" y2="12"/>
+            <line x1="6"  y1="12" x2="2"  y2="12"/>
+            <line x1="12" y1="2"  x2="12" y2="6"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
+          </svg>
+        </div>
+        <h1 class="logo-title">MODO ALERTA</h1>
+        <p class="logo-subtitle">Você consegue identificar um golpe?</p>
+      </div>
+      <p class="splash-desc">
+        Teste seus instintos contra phishing, smishing, vishing e muito mais.<br>
+        12 situações reais por partida, em 3 níveis de dificuldade. Você consegue identificar todas?
+      </p>
+      <button class="btn-primary btn-glow" id="btn-start">
+        <span>INICIAR MISSÃO</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <div class="splash-badges">
+        <div class="badge"><span class="badge-lvl">I</span> Recruta</div>
+        <div class="badge"><span class="badge-lvl">II</span> Investigador</div>
+        <div class="badge"><span class="badge-lvl">III</span> Especialista</div>
+      </div>
+      <div class="splash-brand">
+        <span class="brand-label">Uma iniciativa da equipe de Cibersegurança</span>
+        <div class="brand-logos-row">
+          <img src="Logonovaedu_web.png" alt="eduFC" class="brand-logo-edufc-img">
+          <div class="brand-logos-divider"></div>
+          <img src="LogoFC_web.png" alt="Ferreira Costa" class="brand-logo-png">
+          <div class="brand-logos-divider"></div>
+          <img src="FCx.Labs.svg" alt="FCx.Labs" class="brand-logo-img">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA 1a: ESCOLHA DE MODO -->
+  <div id="screen-mode-select" class="screen">
+    <div class="mode-select-content">
+      <h2 class="mode-select-title">MODO SALA</h2>
+      <p class="mode-select-desc">Jogue em grupo, em tempo real. Acertar é o que mais importa — e quem acerta mais rápido ganha pontos extras.</p>
+      <div class="mode-select-buttons">
+        <button class="btn-primary btn-glow" id="btn-create-room">
+          <span>CRIAR SALA</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button class="btn-secondary" id="btn-join-room">
+          <span>ENTRAR EM SALA</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA 1b: CADASTRO -->
+  <div id="screen-register" class="screen">
+    <div class="register-content">
+      <div class="register-icon">
+        <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h2 class="register-title" id="register-title">IDENTIFICAÇÃO</h2>
+      <p class="register-desc" id="register-desc">Antes de começar, nos diga quem você é.</p>
+      <div class="register-form">
+        <div class="form-group">
+          <label class="form-label">SEU NOME</label>
+          <input type="text" id="input-name" class="form-input" placeholder="Ex: João Silva" maxlength="40" autocomplete="off" autocapitalize="words" enterkeyhint="next">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SUA ÁREA</label>
+          <input type="text" id="input-area" class="form-input" placeholder="Ex: Tecnologia da Informação" maxlength="40" autocomplete="off" autocapitalize="words" enterkeyhint="next">
+        </div>
+        <div class="form-group" id="form-group-roomcode" style="display:none">
+          <label class="form-label">CÓDIGO DA SALA</label>
+          <input type="text" id="input-roomcode" class="form-input form-input-code" placeholder="Ex: 7F3KQP" maxlength="6" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="go">
+        </div>
+      </div>
+      <p class="register-error" id="register-error" style="display:none"></p>
+      <button class="btn-primary" id="btn-register" disabled>
+        <span id="btn-register-label">COMEÇAR</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- TELA 2: LOBBY DA SALA -->
+  <div id="screen-lobby" class="screen">
+    <div class="lobby-content">
+      <p class="lobby-label">CÓDIGO DA SALA</p>
+      <div class="lobby-code-row">
+        <div class="lobby-code" id="lobby-code"></div>
+        <button class="btn-copy-code" id="btn-copy-code" title="Copiar link da sala">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+      </div>
+      <p class="lobby-hint">Compartilhe este código com o grupo para eles entrarem na sala.</p>
+      <div class="lobby-qr" id="lobby-qr" aria-label="QR Code para entrar na sala"></div>
+      <p class="lobby-link" id="lobby-link"></p>
+      <div class="lobby-players" id="lobby-players"></div>
+      <button class="btn-primary btn-glow" id="btn-start-game" style="display:none" disabled>
+        <span>INICIAR JOGO</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="lobby-waiting-msg" id="lobby-waiting-msg" style="display:none">Aguardando o host iniciar o jogo…</p>
+    </div>
+  </div>
+
+  <!-- TELA 3: PERGUNTA -->
+  <div id="screen-question" class="screen">
+    <header class="game-header">
+      <div class="header-level" id="question-progress-label"></div>
+      <div class="header-timer">
+        <span id="question-timer-num">--</span>
+        <div class="timer-bar-track"><div class="timer-bar-fill" id="question-timer-bar"></div></div>
+      </div>
+      <div class="header-score">
+        <span id="header-score">0</span> pts
+      </div>
+    </header>
+
+    <div class="scenario-wrapper">
+      <p class="scenario-context" id="scenario-context" style="display:none"></p>
+
+      <div class="scenario-card" id="scenario-card">
+
+        <div class="scenario-type-bar" id="scenario-type-bar">
+          <span class="type-icon" id="scenario-type-icon"></span>
+          <span class="type-label" id="scenario-type-label"></span>
+        </div>
+
+        <!-- SMS -->
+        <div class="msg-frame phone-frame" id="frame-sms" style="display:none">
+          <div class="phone-header">
+            <div class="phone-signal">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="phone-sender" id="sms-sender"></div>
+            <div class="phone-time">agora</div>
+          </div>
+          <div class="phone-body">
+            <div class="msg-bubble" id="sms-content"></div>
+          </div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="msg-frame whatsapp-frame" id="frame-whatsapp" style="display:none">
+          <div class="wa-topbar">
+            <svg class="wa-back" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <div class="wa-avatar">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+            </div>
+            <div class="wa-header-text">
+              <div class="wa-name" id="wa-sender"></div>
+              <div class="wa-substatus">online</div>
+            </div>
+            <svg class="wa-dots" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+          </div>
+          <div class="wa-chat-bg">
+            <div class="wa-bubble">
+              <span class="wa-text" id="wa-content"></span>
+              <span class="wa-meta">
+                12:41
+                <svg width="16" height="10" viewBox="0 0 16 11" fill="none"><path d="M1 5.5L4.5 9 11 1.5" stroke="#53BDEB" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 5.5L9 9 15.5 1.5" stroke="#53BDEB" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="msg-frame email-frame" id="frame-email" style="display:none">
+          <div class="email-header">
+            <div class="email-row"><span class="email-label">DE:</span><span class="email-val" id="email-sender"></span></div>
+            <div class="email-row"><span class="email-label">ASSUNTO:</span><span class="email-val" id="email-subject"></span></div>
+          </div>
+          <div class="email-body" id="email-content"></div>
+          <button class="fake-cta-btn" id="email-cta" style="display:none"></button>
+        </div>
+
+        <!-- Ligação -->
+        <div class="msg-frame call-frame" id="frame-call" style="display:none">
+          <div class="call-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013.6 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 9.91a16 16 0 006.08 6.08l1.97-1.97a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <div class="call-label">Ligação recebida</div>
+          <div class="call-number" id="call-sender"></div>
+          <div class="call-content" id="call-content"></div>
+        </div>
+
+        <!-- Site -->
+        <div class="msg-frame browser-frame" id="frame-site" style="display:none">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="browser-url" id="site-sender"></div>
+          </div>
+          <div class="browser-body" id="site-content"></div>
+          <button class="fake-cta-btn" id="site-cta" style="display:none"></button>
+        </div>
+
+        <!-- QR Code -->
+        <div class="msg-frame qr-frame" id="frame-qr" style="display:none">
+          <div class="qr-visual">
+            <svg viewBox="0 0 100 100" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="10" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
+              <rect x="20" y="20" width="10" height="10" fill="currentColor"/>
+              <rect x="60" y="10" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
+              <rect x="70" y="20" width="10" height="10" fill="currentColor"/>
+              <rect x="10" y="60" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
+              <rect x="20" y="70" width="10" height="10" fill="currentColor"/>
+              <rect x="50" y="50" width="8" height="8" fill="currentColor"/>
+              <rect x="62" y="50" width="8" height="8" fill="currentColor"/>
+              <rect x="74" y="50" width="16" height="8" fill="currentColor"/>
+              <rect x="50" y="62" width="16" height="8" fill="currentColor"/>
+              <rect x="74" y="62" width="8" height="8" fill="currentColor"/>
+              <rect x="50" y="74" width="8" height="16" fill="currentColor"/>
+              <rect x="66" y="74" width="24" height="8" fill="currentColor"/>
+              <rect x="66" y="82" width="8" height="8" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="qr-desc" id="qr-content"></div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="msg-frame linkedin-frame" id="frame-linkedin" style="display:none">
+          <div class="li-header">
+            <div class="li-avatar">SJ</div>
+            <div class="li-info">
+              <div class="li-name" id="li-sender"></div>
+              <div class="li-badge">Conexão de 2º grau · Recrutadora</div>
+            </div>
+          </div>
+          <div class="li-body" id="li-content"></div>
+        </div>
+
+      </div><!-- end scenario-card -->
+
+      <!-- DECISÃO -->
+      <div class="decision-section">
+        <div class="decision-step" id="step-decision">
+          <p class="step-label">Isso é golpe ou legítimo?</p>
+          <div class="decision-buttons" id="decision-buttons">
+            <button class="decision-btn btn-scam" data-decision="scam">
+              <span class="decision-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </span>
+              <span class="decision-text">GOLPE</span>
+            </button>
+            <button class="decision-btn btn-legit" data-decision="legit">
+              <span class="decision-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <polyline points="9 12 11 14 15 10"/>
+                </svg>
+              </span>
+              <span class="decision-text">LEGÍTIMO</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="question-waiting-msg" id="question-waiting-msg" style="display:none">Resposta enviada — aguardando os outros jogadores…</p>
+
+        <div class="host-monitor" id="host-monitor" style="display:none">
+          <p class="host-monitor-count"><span id="host-answered-count">0</span> / <span id="host-total-count">0</span> jogadores responderam</p>
+          <button class="btn-primary" id="btn-force-reveal">
+            <span>REVELAR AGORA</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TELA 4: REVELAÇÃO -->
+  <div id="screen-reveal" class="screen">
+    <div class="reveal-content">
+      <div class="reveal-header">
+        <h2 class="reveal-title">Resposta correta</h2>
+        <span class="ans-chip" id="reveal-answer-chip"></span>
+      </div>
+      <p class="reveal-explanation" id="reveal-explanation"></p>
+      <div class="reveal-players-list" id="reveal-players-list"></div>
+      <button class="btn-primary" id="btn-reveal-next" style="display:none">
+        <span>PRÓXIMA PERGUNTA</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="lobby-waiting-msg" id="reveal-waiting-msg" style="display:none">Aguardando o host avançar para a próxima pergunta…</p>
+    </div>
+  </div>
+
+  <!-- TELA 5: FINAL -->
+  <div id="screen-final" class="screen">
+    <div class="final-content">
+      <div class="final-trophy" id="final-trophy"></div>
+      <h2 class="final-title" id="final-title"></h2>
+      <p class="final-subtitle" id="final-subtitle"></p>
+      <div class="final-score-box" id="final-score-box">
+        <div class="final-score-num" id="final-score-num"></div>
+        <div class="final-score-label">pontos totais</div>
+      </div>
+      <div class="final-stars" id="final-stars"></div>
+      <div class="final-tip" id="final-tip"></div>
+
+      <div class="final-room-ranking-wrap">
+        <h3 class="final-room-ranking-title">RANKING DA SALA</h3>
+        <div class="final-room-ranking" id="final-room-ranking"></div>
+      </div>
+
+      <div class="final-actions">
+        <button class="btn-primary btn-glow" id="btn-play-again">
+          <span>JOGAR NOVAMENTE</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        </button>
+        <button class="btn-leaderboard" id="btn-leaderboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          <span>VER RANKING HISTÓRICO</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA 6: RANKING -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="leaderboard-content">
+      <div class="leaderboard-header">
+        <h2 class="leaderboard-title">RANKING GERAL</h2>
+        <p class="leaderboard-sub">Melhores pontuações de todas as partidas</p>
+      </div>
+      <div class="leaderboard-list" id="leaderboard-list"></div>
+      <button class="btn-primary" id="btn-back-leaderboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>VOLTAR</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- WATERMARK GLOBAL -->
+  <div class="brand-watermark brand-watermark-right">
+    <img src="FCx.Labs.svg" alt="FCx.Labs">
+  </div>
+  <div class="brand-watermark brand-watermark-left">
+    <img src="LogoFC_web.png" alt="Ferreira Costa" style="height:30px;width:auto;">
+  </div>
+
+  <!-- SOM LIGA/DESLIGA -->
+  <button class="sound-toggle" id="btn-sound" type="button"></button>
+
+  <!-- QR Code do lobby (se o CDN falhar, o lobby mostra só o código e o link) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+
+  <!-- Supabase SDK -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // camelCase (JS) <-> snake_case (colunas do Postgres)
+    const toSnake = (s) => s.replace(/[A-Z]/g, (m) => '_' + m.toLowerCase());
+    const toCamel = (s) => s.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+    const mapKeys = (obj, fn) => {
+      const out = {};
+      for (const [k, v] of Object.entries(obj)) out[fn(k)] = v;
+      return out;
+    };
+    const toSnakeObj = (obj) => mapKeys(obj, toSnake);
+    const toCamelObj = (row) => (row ? mapKeys(row, toCamel) : row);
+    // Sufixo único por assinatura: recriar um canal (ex: celular voltando da tela apagada)
+    // não colide com o anterior que ainda está sendo encerrado.
+    const uniq = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const cfg = window.supabaseConfig;
+        if (!cfg || !cfg.url || !cfg.anonKey || cfg.url.includes('COLE_AQUI')) {
+          throw new Error('Supabase não configurado');
+        }
+        const supabase = createClient(cfg.url, cfg.anonKey);
+        window._db = supabase;
+
+        window._saveScore = async (name, area, score, medal) => {
+          const { error } = await supabase.from('ranking').insert({
+            name, area, score, medal,
+            date: new Date().toLocaleDateString('pt-BR'),
+            timestamp: Date.now(),
+          });
+          if (error) throw error;
+        };
+
+        window._loadRanking = async () => {
+          const { data, error } = await supabase
+            .from('ranking').select('*').order('score', { ascending: false }).limit(50);
+          if (error) throw error;
+          return (data || []).map(toCamelObj);
+        };
+
+        // ── MODO SALA ──────────────────────────────
+        window._roomExists = async (code) => {
+          const { data } = await supabase.from('rooms').select('code').eq('code', code).maybeSingle();
+          return !!data;
+        };
+
+        window._getRoom = async (code) => {
+          const { data } = await supabase.from('rooms').select('*').eq('code', code).maybeSingle();
+          return toCamelObj(data);
+        };
+
+        window._createRoom = async (code, data) => {
+          const { error } = await supabase.from('rooms').insert(toSnakeObj(data));
+          if (error) throw error;
+        };
+
+        window._updateRoom = async (code, patch) => {
+          const { error } = await supabase.from('rooms').update(toSnakeObj(patch)).eq('code', code);
+          if (error) throw error;
+        };
+
+        window._setPlayer = async (code, playerId, data) => {
+          const row = toSnakeObj({ id: playerId, roomCode: code, ...data });
+          const { error } = await supabase.from('players').upsert(row, { onConflict: 'room_code,id' });
+          if (error) throw error;
+        };
+
+        window._getPlayer = async (code, playerId) => {
+          const { data } = await supabase.from('players').select('*').eq('room_code', code).eq('id', playerId).maybeSingle();
+          return toCamelObj(data);
+        };
+
+        window._getMyAnswers = async (code, playerId) => {
+          const { data, error } = await supabase.from('answers').select('*').eq('room_code', code).eq('player_id', playerId);
+          if (error) throw error;
+          return (data || []).map(toCamelObj);
+        };
+
+        window._updatePlayerScore = async (code, playerId, score) => {
+          const { error } = await supabase.from('players').update({ score }).eq('room_code', code).eq('id', playerId);
+          if (error) throw error;
+        };
+
+        window._submitAnswer = async (code, answerId, data) => {
+          const row = toSnakeObj({ roomCode: code, ...data });
+          const { error } = await supabase.from('answers').insert(row);
+          if (error) throw error;
+        };
+
+        // Realtime do Supabase só entrega mudanças a partir do momento em que
+        // assina o canal — por isso cada subscribe faz uma leitura inicial e
+        // depois vai mesclando os eventos (insert/update/delete) recebidos.
+        window._subscribeRoom = (code, cb) => {
+          supabase.from('rooms').select('*').eq('code', code).maybeSingle()
+            .then(({ data }) => cb(toCamelObj(data)));
+
+          const channel = supabase
+            .channel(`room-${code}-${uniq()}`)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms', filter: `code=eq.${code}` },
+              (payload) => cb(payload.eventType === 'DELETE' ? null : toCamelObj(payload.new)))
+            .subscribe();
+          return () => supabase.removeChannel(channel);
+        };
+
+        window._subscribeCollection = (code, table, cb) => {
+          let rows = new Map();
+          const emit = () => cb(Array.from(rows.values()));
+
+          supabase.from(table).select('*').eq('room_code', code)
+            .then(({ data }) => {
+              rows = new Map((data || []).map((r) => [r.id, toCamelObj(r)]));
+              emit();
+            });
+
+          const channel = supabase
+            .channel(`${table}-${code}-${uniq()}`)
+            .on('postgres_changes', { event: '*', schema: 'public', table, filter: `room_code=eq.${code}` },
+              (payload) => {
+                const row = payload.new || payload.old;
+                if (payload.eventType === 'DELETE') rows.delete(row.id);
+                else rows.set(row.id, toCamelObj(row));
+                emit();
+              })
+            .subscribe();
+          return () => supabase.removeChannel(channel);
+        };
+
+        window._subscribeAnswers = (code, questionIndex, cb) => {
+          let rows = new Map();
+          const emit = () => cb(Array.from(rows.values()));
+
+          supabase.from('answers').select('*').eq('room_code', code).eq('question_index', questionIndex)
+            .then(({ data }) => {
+              rows = new Map((data || []).map((r) => [r.player_id, toCamelObj(r)]));
+              emit();
+            });
+
+          const channel = supabase
+            .channel(`answers-${code}-${questionIndex}-${uniq()}`)
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'answers', filter: `room_code=eq.${code}` },
+              (payload) => {
+                if (payload.new.question_index !== questionIndex) return;
+                rows.set(payload.new.player_id, toCamelObj(payload.new));
+                emit();
+              })
+            .subscribe();
+          return () => supabase.removeChannel(channel);
+        };
+      } catch(e) {
+        console.warn('Supabase não configurado — modo sala e ranking histórico ficam indisponíveis.', e);
+      }
+    });
+  </script>
+
+  <script src="supabase-config.js?v=6"></script>
+  <script src="data.js?v=6"></script>
+  <script src="game.js?v=6"></script>
+  <script src="room.js?v=6"></script>
+</body>
+</html>
