@@ -1,0 +1,321 @@
+/* ═══════════════════════════════════════════════
+   MODO ALERTA — Cenários com a cara de cada app
+   (modo escuro, como a maioria dos celulares hoje)
+   ═══════════════════════════════════════════════ */
+
+.scene { font-family: var(--font-body); }
+.sc-ico { display: inline-flex; flex-shrink: 0; opacity: 0.85; }
+.sc-link { color: #53bdeb; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+
+/* Entrada das mensagens */
+.sc-anim { opacity: 0; transform: translateY(6px); }
+.sc-anim.sc-in { opacity: 1; transform: none; transition: opacity 0.25s ease, transform 0.25s ease; }
+
+/* Faixa do tipo + nível */
+.scenario-level {
+  margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+  padding: 3px 10px; border-radius: 50px; border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.scenario-level:empty { display: none; }
+
+/* Avatares */
+.sc-avatar, .sc-wa-av, .sc-li-av, .sc-li-mini, .sc-call-av {
+  border-radius: 50%; flex-shrink: 0; color: #fff; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.sc-avatar { width: 34px; height: 34px; font-size: 13px; }
+.sc-avatar-unknown { background: #6b7c85 !important; color: #dfe5e7; }
+
+/* ── SMS (estilo app de mensagens) ───────────── */
+.sc-sms { background: #131316; color: #e3e3e3; }
+.sc-sms-top {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  background: #1b1b1f; border-bottom: 1px solid #26262b;
+}
+.sc-sms-who { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-sms-thread { padding: 14px 14px 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.sc-sms-day { align-self: center; font-size: 12px; color: #9aa0a6; margin-bottom: 8px; }
+.sc-sms-bubble {
+  max-width: 82%; background: #2f3033; color: #e3e3e3;
+  padding: 10px 14px; border-radius: 20px 20px 20px 6px;
+  font-size: 15px; line-height: 1.45; overflow-wrap: anywhere;
+}
+.sc-sms-bubble .sc-link { color: #a8c7fa; }
+.sc-sms-input { padding: 0 14px 14px; }
+.sc-sms-input span {
+  display: block; background: #2b2c2f; color: #8e918f; font-size: 14px;
+  padding: 11px 16px; border-radius: 24px;
+}
+
+/* ── WHATSAPP (modo escuro) ──────────────────── */
+.sc-wa { background: #0b141a; color: #e9edef; }
+.sc-wa-top {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: #1f2c34; color: #e9edef;
+}
+.sc-wa-av { width: 38px; height: 38px; font-size: 14px; }
+.sc-wa-head { flex: 1; min-width: 0; }
+.sc-wa-name { font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-wa-status { font-size: 12.5px; color: #8696a0; min-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-wa-top .sc-ico { opacity: 0.9; }
+
+.sc-wa-chat {
+  padding: 10px 12px 14px; min-height: 170px;
+  display: flex; flex-direction: column; gap: 3px;
+  background-color: #0b141a;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.025) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.02) 0 2px, transparent 3px);
+  background-size: 46px 46px, 62px 62px;
+}
+.sc-wa-day { display: flex; justify-content: center; margin: 4px 0 10px; }
+.sc-wa-day span { background: #182229; color: #8696a0; font-size: 12px; padding: 5px 12px; border-radius: 8px; }
+
+.sc-wa-unknown {
+  align-self: center; width: min(280px, 92%); text-align: center;
+  background: #182229; border-radius: 12px; padding: 14px 14px 12px; margin-bottom: 12px;
+}
+.sc-wa-unknown-av {
+  width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 8px;
+  background: #6b7c85; color: #dfe5e7; display: flex; align-items: center; justify-content: center;
+}
+.sc-wa-unknown-name { font-size: 15px; font-weight: 500; }
+.sc-wa-unknown-num { font-size: 13px; color: #8696a0; margin-top: 2px; }
+.sc-wa-unknown-note { font-size: 12.5px; color: #8696a0; margin-top: 6px; }
+.sc-wa-unknown-actions { display: flex; justify-content: center; gap: 28px; margin-top: 10px; font-size: 14px; font-weight: 500; color: #00a884; }
+.sc-wa-unknown-actions .block { color: #f15c6d; }
+
+.sc-wa-row { display: flex; justify-content: flex-start; }
+.sc-wa-bubble {
+  position: relative; max-width: 82%;
+  background: #202c33; color: #e9edef;
+  padding: 6px 9px 8px; border-radius: 8px;
+  font-size: 15px; line-height: 1.4; text-align: left;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.25);
+  overflow-wrap: anywhere;
+}
+/* "rabinho" do balão, só na primeira mensagem do bloco — como no app */
+.sc-wa-bubble { margin-left: 8px; }
+.sc-wa-tail { border-top-left-radius: 0; }
+.sc-wa-tail::before {
+  content: ''; position: absolute; top: 0; left: -8px;
+  border-top: 0 solid transparent; border-right: 8px solid #202c33; border-bottom: 10px solid transparent;
+}
+.sc-wa-author { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.sc-wa-spacer { display: inline-block; width: 46px; }
+.sc-wa-time { position: absolute; right: 8px; bottom: 4px; font-size: 11px; color: #8696a0; }
+
+/* Áudio */
+.sc-wa-audio { min-width: 260px; padding: 8px 10px 6px; }
+.sc-wa-audio-row { display: flex; align-items: center; gap: 10px; }
+.sc-wa-play { color: #aebac1; display: flex; }
+.sc-wa-wave { flex: 1; display: flex; align-items: center; gap: 2px; height: 28px; }
+.sc-wa-wave span { flex: 1; max-width: 4px; background: #8696a0; border-radius: 2px; }
+.sc-wa-audio-av {
+  position: relative; width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff;
+}
+.sc-wa-audio-av span {
+  position: absolute; right: -3px; bottom: -2px; color: #53bdeb;
+  background: #202c33; border-radius: 50%; padding: 2px; display: flex;
+}
+.sc-wa-audio-meta { display: flex; justify-content: space-between; font-size: 11px; color: #8696a0; margin: 2px 0 0 32px; padding-right: 40px; }
+.sc-wa-audio-meta .sc-wa-time { position: static; }
+.sc-wa-transcript {
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 14px; line-height: 1.45; color: #d1d7db;
+}
+.sc-wa-transcript span { display: block; font-size: 11.5px; color: #8696a0; margin-bottom: 3px; }
+
+/* Documento */
+.sc-wa-filebubble { padding: 4px 4px 20px; min-width: 250px; }
+.sc-wa-doc { display: flex; align-items: center; gap: 10px; background: #1a2329; border-radius: 6px; padding: 10px 12px; }
+.sc-wa-doc-ico { display: flex; flex-shrink: 0; }
+.sc-wa-doc-txt { min-width: 0; }
+.sc-wa-doc-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-wa-doc-meta { font-size: 12px; color: #8696a0; margin-top: 2px; }
+
+.sc-wa-input { display: flex; align-items: center; gap: 8px; padding: 8px 10px 10px; background: #0b141a; }
+.sc-wa-field {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  background: #2a3942; color: #8696a0; border-radius: 24px; padding: 9px 14px;
+}
+.sc-wa-field .ph { flex: 1; font-size: 15px; }
+.sc-wa-mic {
+  width: 44px; height: 44px; border-radius: 50%; background: #00a884; color: #fff;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ── E-MAIL (estilo app de e-mail, escuro) ───── */
+.sc-mail { background: #1f1f1f; color: #e3e3e3; padding-bottom: 18px; }
+.sc-mail-top { display: flex; align-items: center; gap: 18px; padding: 12px 16px; color: #c4c7c5; }
+.sc-mail-top-sp { flex: 1; }
+.sc-mail-subject { padding: 4px 18px 14px; font-size: 20px; line-height: 1.3; font-weight: 400; }
+.sc-mail-tag {
+  display: inline-block; vertical-align: middle; margin-left: 4px;
+  font-size: 11.5px; color: #c4c7c5; background: #444746; padding: 2px 7px; border-radius: 4px;
+}
+.sc-mail-from { display: flex; gap: 12px; padding: 0 18px 14px; align-items: flex-start; }
+.sc-mail-from .sc-avatar { width: 40px; height: 40px; font-size: 15px; }
+.sc-mail-who { min-width: 0; flex: 1; }
+.sc-mail-line1 { display: flex; gap: 8px; align-items: baseline; }
+.sc-mail-name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-mail-time { margin-left: auto; font-size: 12px; color: #9aa0a6; flex-shrink: 0; }
+.sc-mail-addr { font-size: 13.5px; color: #c4c7c5; overflow-wrap: anywhere; margin-top: 1px; }
+.sc-mail-to { font-size: 12.5px; color: #9aa0a6; margin-top: 2px; }
+.sc-mail-body { padding: 4px 18px 0 70px; font-size: 15px; line-height: 1.55; color: #d6d8d6; }
+.sc-mail-body .sc-link { color: #a8c7fa; }
+.sc-mail-rsvp { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.sc-mail-rsvp span { border: 1px solid #8e918f; color: #a8c7fa; border-radius: 18px; padding: 6px 16px; font-size: 14px; font-weight: 500; }
+.sc-mail-cta {
+  display: inline-block; margin-top: 16px; padding: 11px 22px;
+  background: #1a73e8; color: #fff; border-radius: 6px; font-size: 15px; font-weight: 600;
+}
+.sc-mail-linkhint {
+  display: flex; gap: 6px; align-items: flex-start; margin-top: 10px;
+  font-size: 12.5px; color: #9aa0a6; line-height: 1.45;
+}
+.sc-mail-linkhint svg { flex-shrink: 0; margin-top: 2px; }
+
+/* ── LIGAÇÃO (tela de chamada) ───────────────── */
+.sc-call {
+  background: linear-gradient(180deg, #23384d 0%, #121a24 70%);
+  color: #fff; text-align: center; padding: 18px 18px 20px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.sc-call-state { font-size: 13px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 6px; }
+.sc-call-live { width: 7px; height: 7px; border-radius: 50%; background: #30d158; box-shadow: 0 0 0 3px rgba(48,209,88,0.25); }
+.sc-call-av { width: 60px; height: 60px; font-size: 22px; margin: 12px 0 8px; }
+.sc-call-av.sc-avatar-unknown svg { width: 30px; height: 30px; }
+.sc-call-name { font-size: 22px; font-weight: 400; letter-spacing: 0.2px; overflow-wrap: anywhere; }
+.sc-call-note { font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+.sc-call-lines { width: 100%; display: flex; flex-direction: column; gap: 8px; margin: 14px 0 14px; text-align: left; }
+.sc-call-line {
+  background: rgba(255,255,255,0.09); border-radius: 14px; padding: 10px 14px;
+  font-size: 15px; line-height: 1.45; color: #f2f2f7;
+}
+.sc-call-speaker { display: block; font-size: 11.5px; letter-spacing: 0.4px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 3px; }
+/* Botões da chamada numa linha só (Mudo · Teclado · Alto-falante · Desligar) */
+.sc-call-keys { display: flex; justify-content: center; align-items: flex-start; gap: 18px; }
+.sc-call-keys span {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  font-size: 11px; color: rgba(255,255,255,0.75);
+}
+.sc-call-keys span svg { box-sizing: content-box; padding: 13px; border-radius: 50%; background: rgba(255,255,255,0.14); }
+.sc-call-keys span.sc-call-end svg { background: #ff3b30; color: #fff; padding: 11px; }
+.sc-call-keys em { font-style: normal; }
+
+/* ── SITE (navegador do celular) ─────────────── */
+.sc-web { background: #202124; }
+.sc-web-bar { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #202124; color: #e8eaed; }
+.sc-web-omni {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+  background: #303134; border-radius: 22px; padding: 9px 14px;
+}
+.sc-web-lock { color: #9aa0a6; display: flex; flex-shrink: 0; }
+.sc-web-url { min-width: 0; font-size: 14.5px; overflow-wrap: anywhere; line-height: 1.3; }
+.sc-web-url .host { color: #e8eaed; }
+.sc-web-url .path { color: #9aa0a6; }
+.sc-web-tabs {
+  width: 20px; height: 20px; border: 2px solid #e8eaed; border-radius: 4px;
+  font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sc-web-page { background: #ffffff; color: #202124; padding: 22px 22px 26px; }
+.sc-web-brand { font-size: 13px; font-weight: 700; color: #5f6368; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 14px; }
+.sc-web-title { font-size: 21px; font-weight: 700; color: #202124; margin-bottom: 6px; }
+.sc-web-text { font-size: 15px; line-height: 1.5; color: #3c4043; margin-bottom: 16px; }
+.sc-web-field { margin-bottom: 12px; }
+.sc-web-field label { display: block; font-size: 12.5px; font-weight: 600; color: #5f6368; margin-bottom: 4px; }
+.sc-web-input { height: 38px; border: 1px solid #dadce0; border-radius: 6px; background: #fff; }
+.sc-web-row { display: flex; gap: 12px; }
+.sc-web-row .sc-web-field { flex: 1; min-width: 0; }
+.sc-web-btn {
+  margin-top: 6px; text-align: center; background: #1a73e8; color: #fff;
+  border-radius: 6px; padding: 12px; font-size: 15px; font-weight: 600;
+}
+
+/* ── QR CODE (cartaz + câmera) ───────────────── */
+.sc-qr { background: #2a2622; padding: 22px 18px 18px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.sc-poster {
+  width: min(300px, 100%); background: #fbfaf6; color: #1d1d1f; text-align: center;
+  border-radius: 4px; padding: 20px 20px 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.06);
+}
+.sc-poster-tag { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #c8102e; }
+.sc-poster-title { font-size: 21px; font-weight: 800; line-height: 1.2; margin: 6px 0 6px; }
+.sc-poster-text { font-size: 13.5px; line-height: 1.45; color: #4a4a4f; margin-bottom: 14px; }
+.sc-poster-qr { position: relative; display: inline-block; }
+.sc-qr-code { background: #fff; padding: 8px; line-height: 0; display: inline-block; }
+.sc-qr-code img, .sc-qr-code canvas, .sc-qr-code svg { display: block; width: 132px; height: 132px; }
+/* Adesivo colado por cima, meio torto, com sombra e cantinho levantado */
+.sc-qr-sticker {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-30%, -62%) rotate(-12deg);
+  background: #fffdf2; padding: 7px; border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 3px 7px 16px rgba(0,0,0,0.45);
+}
+.sc-qr-sticker::after {
+  content: ''; position: absolute; right: 0; bottom: 0; width: 18px; height: 18px;
+  background: linear-gradient(135deg, #fff 45%, #d9d6cf 50%, #bdb9b0 100%);
+  border-top-left-radius: 4px; box-shadow: -2px -2px 4px rgba(0,0,0,0.12);
+}
+.sc-qr-sticker .sc-qr-code { padding: 0; }
+.sc-qr-sticker .sc-qr-code { background: #fffdf2; }
+.sc-qr-sticker .sc-qr-code img, .sc-qr-sticker .sc-qr-code canvas, .sc-qr-sticker .sc-qr-code svg { width: 88px; height: 88px; }
+/* Prévia da câmera (como a "pílula" amarela que aparece ao ler um QR) */
+.sc-qr-scan {
+  display: flex; align-items: center; gap: 10px; max-width: 100%;
+  background: #ffd60a; color: #1d1d1f; border-radius: 14px; padding: 10px 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+.sc-qr-scan-ico { display: flex; flex-shrink: 0; }
+.sc-qr-scan-lbl { font-size: 11.5px; font-weight: 600; opacity: 0.75; }
+.sc-qr-scan-url { font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
+
+/* ── LINKEDIN (mensagens, escuro) ────────────── */
+.sc-li { background: #1b1f23; color: #e8eaed; }
+.sc-li-top { display: flex; align-items: center; gap: 14px; padding: 12px 14px; background: #1d2226; border-bottom: 1px solid #2f353b; }
+.sc-li-top-title { flex: 1; font-size: 16px; font-weight: 600; }
+.sc-li-profile { display: flex; gap: 12px; padding: 16px 16px 14px; border-bottom: 1px solid #2f353b; align-items: center; }
+.sc-li-av { width: 54px; height: 54px; font-size: 19px; }
+.sc-li-name { font-size: 16px; font-weight: 600; }
+.sc-li-headline { font-size: 13.5px; color: #c9d0d6; margin-top: 2px; }
+.sc-li-meta { font-size: 12.5px; color: #8c959f; margin-top: 3px; }
+.sc-li-thread { padding: 14px 16px 6px; display: flex; flex-direction: column; gap: 6px; }
+.sc-li-msg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.sc-li-msg-head b { font-size: 14px; }
+.sc-li-msg-head span { font-size: 12px; color: #8c959f; }
+.sc-li-mini { width: 28px; height: 28px; font-size: 11px; }
+.sc-li-msg-text { font-size: 15px; line-height: 1.5; color: #e8eaed; padding-left: 36px; }
+.sc-li-input { margin: 10px 16px 16px; background: #38434f; color: #a8b3bd; font-size: 14px; border-radius: 8px; padding: 11px 14px; }
+
+/* ── REVELAÇÃO: sinais + o que fazer ─────────── */
+.reveal-explanation { text-align: left; }
+.rv-summary { font-size: 15px; line-height: 1.55; color: var(--text); font-weight: 500; }
+.rv-label {
+  margin-top: 14px; margin-bottom: 6px; font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted);
+}
+.rv-signals { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.rv-signals li { position: relative; padding-left: 22px; font-size: 14px; line-height: 1.5; color: var(--text-dim); }
+.rv-signals li::before { content: ''; position: absolute; left: 4px; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.rv-signals.scam li::before  { background: var(--danger); }
+.rv-signals.legit li::before { background: var(--primary); }
+.rv-action {
+  margin-top: 14px; padding: 10px 12px; border-radius: 10px;
+  background: var(--bg3); font-size: 14px; line-height: 1.5; color: var(--text);
+}
+.rv-action b { color: var(--primary); }
+
+/* ── CELULAR ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .sc-mail-body { padding-left: 18px; }
+  .sc-mail-subject { font-size: 18px; }
+  .sc-wa-audio { min-width: 0; width: 100%; }
+  .sc-wa-filebubble { min-width: 0; }
+  .sc-call-keys { gap: 12px; }
+  .sc-web-page { padding: 18px 16px 20px; }
+  .scenario-level { font-size: 10px; padding: 2px 8px; }
+}

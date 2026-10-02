@@ -6,7 +6,8 @@
   <title>MODO ALERTA — Você consegue identificar um golpe?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="scenes.css?v=7">
 </head>
 <body>
 
@@ -152,116 +153,10 @@
         <div class="scenario-type-bar" id="scenario-type-bar">
           <span class="type-icon" id="scenario-type-icon"></span>
           <span class="type-label" id="scenario-type-label"></span>
+          <span class="scenario-level" id="scenario-level"></span>
         </div>
 
-        <!-- SMS -->
-        <div class="msg-frame phone-frame" id="frame-sms" style="display:none">
-          <div class="phone-header">
-            <div class="phone-signal">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="phone-sender" id="sms-sender"></div>
-            <div class="phone-time">agora</div>
-          </div>
-          <div class="phone-body">
-            <div class="msg-bubble" id="sms-content"></div>
-          </div>
-        </div>
-
-        <!-- WhatsApp -->
-        <div class="msg-frame whatsapp-frame" id="frame-whatsapp" style="display:none">
-          <div class="wa-topbar">
-            <svg class="wa-back" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            <div class="wa-avatar">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-            </div>
-            <div class="wa-header-text">
-              <div class="wa-name" id="wa-sender"></div>
-              <div class="wa-substatus">online</div>
-            </div>
-            <svg class="wa-dots" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
-          </div>
-          <div class="wa-chat-bg">
-            <div class="wa-bubble">
-              <span class="wa-text" id="wa-content"></span>
-              <span class="wa-meta">
-                12:41
-                <svg width="16" height="10" viewBox="0 0 16 11" fill="none"><path d="M1 5.5L4.5 9 11 1.5" stroke="#53BDEB" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 5.5L9 9 15.5 1.5" stroke="#53BDEB" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div class="msg-frame email-frame" id="frame-email" style="display:none">
-          <div class="email-header">
-            <div class="email-row"><span class="email-label">DE:</span><span class="email-val" id="email-sender"></span></div>
-            <div class="email-row"><span class="email-label">ASSUNTO:</span><span class="email-val" id="email-subject"></span></div>
-          </div>
-          <div class="email-body" id="email-content"></div>
-          <button class="fake-cta-btn" id="email-cta" style="display:none"></button>
-        </div>
-
-        <!-- Ligação -->
-        <div class="msg-frame call-frame" id="frame-call" style="display:none">
-          <div class="call-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013.6 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 9.91a16 16 0 006.08 6.08l1.97-1.97a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-            </svg>
-          </div>
-          <div class="call-label">Ligação recebida</div>
-          <div class="call-number" id="call-sender"></div>
-          <div class="call-content" id="call-content"></div>
-        </div>
-
-        <!-- Site -->
-        <div class="msg-frame browser-frame" id="frame-site" style="display:none">
-          <div class="browser-bar">
-            <div class="browser-dots">
-              <span class="dot dot-red"></span>
-              <span class="dot dot-yellow"></span>
-              <span class="dot dot-green"></span>
-            </div>
-            <div class="browser-url" id="site-sender"></div>
-          </div>
-          <div class="browser-body" id="site-content"></div>
-          <button class="fake-cta-btn" id="site-cta" style="display:none"></button>
-        </div>
-
-        <!-- QR Code -->
-        <div class="msg-frame qr-frame" id="frame-qr" style="display:none">
-          <div class="qr-visual">
-            <svg viewBox="0 0 100 100" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="10" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
-              <rect x="20" y="20" width="10" height="10" fill="currentColor"/>
-              <rect x="60" y="10" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
-              <rect x="70" y="20" width="10" height="10" fill="currentColor"/>
-              <rect x="10" y="60" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
-              <rect x="20" y="70" width="10" height="10" fill="currentColor"/>
-              <rect x="50" y="50" width="8" height="8" fill="currentColor"/>
-              <rect x="62" y="50" width="8" height="8" fill="currentColor"/>
-              <rect x="74" y="50" width="16" height="8" fill="currentColor"/>
-              <rect x="50" y="62" width="16" height="8" fill="currentColor"/>
-              <rect x="74" y="62" width="8" height="8" fill="currentColor"/>
-              <rect x="50" y="74" width="8" height="16" fill="currentColor"/>
-              <rect x="66" y="74" width="24" height="8" fill="currentColor"/>
-              <rect x="66" y="82" width="8" height="8" fill="currentColor"/>
-            </svg>
-          </div>
-          <div class="qr-desc" id="qr-content"></div>
-        </div>
-
-        <!-- LinkedIn -->
-        <div class="msg-frame linkedin-frame" id="frame-linkedin" style="display:none">
-          <div class="li-header">
-            <div class="li-avatar">SJ</div>
-            <div class="li-info">
-              <div class="li-name" id="li-sender"></div>
-              <div class="li-badge">Conexão de 2º grau · Recrutadora</div>
-            </div>
-          </div>
-          <div class="li-body" id="li-content"></div>
-        </div>
+        <div class="scene" id="scene"></div>
 
       </div><!-- end scenario-card -->
 
@@ -312,7 +207,7 @@
         <h2 class="reveal-title">Resposta correta</h2>
         <span class="ans-chip" id="reveal-answer-chip"></span>
       </div>
-      <p class="reveal-explanation" id="reveal-explanation"></p>
+      <div class="reveal-explanation" id="reveal-explanation"></div>
       <div class="reveal-players-list" id="reveal-players-list"></div>
       <button class="btn-primary" id="btn-reveal-next" style="display:none">
         <span>PRÓXIMA PERGUNTA</span>
@@ -539,9 +434,10 @@
     });
   </script>
 
-  <script src="supabase-config.js?v=6"></script>
-  <script src="data.js?v=6"></script>
-  <script src="game.js?v=6"></script>
-  <script src="room.js?v=6"></script>
+  <script src="supabase-config.js?v=7"></script>
+  <script src="data.js?v=7"></script>
+  <script src="game.js?v=7"></script>
+  <script src="scenes.js?v=7"></script>
+  <script src="room.js?v=7"></script>
 </body>
 </html>

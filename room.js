@@ -1,15 +1,15 @@
 /* ═══════════════════════════════════════════════
    MODO ALERTA — Modo Sala (multiplayer estilo Kahoot)
-   Depende de game.js (Sound, showScreen, transitionTo,
-   svg, typeConfig, renderScenarioFrame, animateScenarioEntry,
-   saveToLeaderboard, showLeaderboard) e de data.js (gameData).
+   Depende de game.js (Sound, showScreen, transitionTo, svg,
+   saveToLeaderboard, showLeaderboard), scenes.js (renderScenarioFrame,
+   animateScenarioEntry) e data.js (gameData).
    ═══════════════════════════════════════════════ */
 
 const ROOM_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O/1/I
-const TIME_LIMIT_SEC = 20;
+const TIME_LIMIT_SEC = 25;      // os cenários têm cara de app de verdade: dá tempo de olhar os detalhes
 const MAX_POINTS = 1000;
 const MIN_POINTS = 500;
-const QUESTIONS_PER_ROOM = 12;
+const QUESTIONS_PER_LEVEL = 4;  // 3 níveis × 4 = 12 perguntas, do Recruta ao Especialista
 
 const RoomState = {
   roomCode: null,
@@ -53,7 +53,7 @@ function flattenScenarios(data) {
   const out = [];
   data.levels.forEach(level => {
     level.scenarios.forEach(scenario => {
-      out.push({ ...scenario, levelName: level.name, levelColor: level.color });
+      out.push({ ...scenario, levelName: level.name, levelColor: level.color, levelIcon: level.icon });
     });
   });
   return out;
@@ -68,10 +68,20 @@ function shuffle(arr) {
   return a;
 }
 
-// Sorteia um subconjunto do banco de perguntas pra essa sala, pra não repetir
-// sempre a mesma sequência entre salas diferentes.
-function pickQuestionSet(pool, count) {
-  return shuffle(pool).slice(0, Math.min(count, pool.length));
+// Monta a partida em ordem de dificuldade: 4 do Recruta, 4 do Investigador e
+// 4 do Especialista, sorteadas a cada sala. Cada nível tem 1 ou 2 legítimos,
+// pra resposta não virar "é sempre golpe".
+function pickQuestionSet(data, perLevel) {
+  const pool = flattenScenarios(data);
+  const out = [];
+  data.levels.forEach(level => {
+    const inLevel = pool.filter(s => s.levelName === level.name);
+    const legit = shuffle(inLevel.filter(s => !s.isScam));
+    const scam  = shuffle(inLevel.filter(s => s.isScam));
+    const nLegit = Math.min(legit.length, 1 + Math.floor(Math.random() * 2));
+    out.push(...shuffle([...legit.slice(0, nLegit), ...scam.slice(0, perLevel - nLegit)]));
+  });
+  return out;
 }
 
 function getOrCreatePlayerId() {
@@ -252,8 +262,7 @@ function showRegisterForRoom() {
 }
 
 async function createRoom() {
-  const pool = flattenScenarios(gameData);
-  RoomState.questions = pickQuestionSet(pool, QUESTIONS_PER_ROOM);
+  RoomState.questions = pickQuestionSet(gameData, QUESTIONS_PER_LEVEL);
 
   let code = generateRoomCode();
   while (await window._roomExists(code)) {
@@ -720,7 +729,7 @@ function showReveal() {
   const chip = document.getElementById('reveal-answer-chip');
   chip.textContent = scenario.revealLabel || (scenario.isScam ? 'GOLPE' : 'LEGÍTIMO');
   chip.className = `ans-chip ${scenario.isScam ? 'scam' : 'legit'}`;
-  document.getElementById('reveal-explanation').textContent = scenario.explanation;
+  renderRevealExplanation(scenario);
 
   if (RoomState.unsubAnswers) RoomState.unsubAnswers();
   RoomState.unsubAnswers = window._subscribeAnswers(RoomState.roomCode, idx, (answers) => {
@@ -746,6 +755,17 @@ function showReveal() {
     btn.style.display = 'none';
     waitMsg.style.display = 'block';
   }
+}
+
+// Explicação da revelação: resumo + sinais que decidem + o que fazer na vida real
+function renderRevealExplanation(scenario) {
+  const el = document.getElementById('reveal-explanation');
+  const kind = scenario.isScam ? 'scam' : 'legit';
+  const signals = (scenario.signals || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
+  el.innerHTML = `
+    <p class="rv-summary">${escapeHtml(scenario.explanation || '')}</p>
+    ${signals ? `<div class="rv-label">${scenario.isScam ? 'Sinais de golpe' : 'Por que é seguro'}</div><ul class="rv-signals ${kind}">${signals}</ul>` : ''}
+    ${scenario.action ? `<div class="rv-action"><b>O que fazer:</b> ${escapeHtml(scenario.action)}</div>` : ''}`;
 }
 
 function renderRevealList(answers) {
