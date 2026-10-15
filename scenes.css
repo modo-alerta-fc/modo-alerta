@@ -319,3 +319,57 @@
   .sc-web-page { padding: 18px 16px 20px; }
   .scenario-level { font-size: 10px; padding: 2px 8px; }
 }
+
+/* ── OUTUBRO ROSA: carta de mito ou verdade ── */
+.sc-health {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  min-height: 260px; padding: 34px 28px 22px; text-align: center;
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(242,85,155,0.22) 0%, rgba(242,85,155,0) 60%),
+    linear-gradient(180deg, #1c1018 0%, #120a10 100%);
+  border: 1px solid rgba(242,85,155,0.35);
+}
+.sc-health-ribbon {
+  position: absolute; right: -14px; bottom: -22px; width: 120px;
+  color: var(--primary); opacity: 0.18; transform: rotate(-12deg);
+}
+.sc-health-ribbon svg { width: 100%; height: auto; display: block; }
+.sc-health-kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--primary);
+}
+.sc-health-statement {
+  position: relative; max-width: 30ch;
+  font-size: clamp(19px, 2.2vw, 28px); font-weight: 700; line-height: 1.35;
+  color: #fff; text-wrap: balance;
+}
+.sc-health-foot {
+  margin-top: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Paralelo saúde × cibersegurança na revelação */
+.rv-bridge {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-top: 4px; padding: 12px 14px; border-radius: 12px;
+  background: rgba(242,85,155,0.08); border: 1px solid rgba(242,85,155,0.25);
+  font-size: 14px; line-height: 1.5; color: #f6d3e3;
+}
+.rv-bridge svg { flex: 0 0 auto; color: var(--primary); margin-top: 1px; }
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .sc-health { min-height: 0; padding: 18px 20px 14px; gap: 8px; }
+  .sc-health-statement { font-size: 18px; }
+  .sc-health-ribbon { width: 80px; }
+}
+
+/* Pergunta das situações de saúde, embaixo da cena */
+.sc-health-ask {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 12px; padding: 12px 16px; border-radius: 12px;
+  background: rgba(242,85,155,0.1); border: 1px solid rgba(242,85,155,0.35);
+  font-size: 17px; font-weight: 700; color: #fff; text-align: center;
+}
+.sc-health-ask svg { flex: 0 0 auto; color: var(--primary); }

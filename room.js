@@ -9,7 +9,7 @@ const ROOM_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O/1/I
 const TIME_LIMIT_SEC = 25;      // os cenários têm cara de app de verdade: dá tempo de olhar os detalhes
 const MAX_POINTS = 1000;
 const MIN_POINTS = 500;
-const QUESTIONS_PER_LEVEL = 4;  // 3 níveis × 4 = 12 perguntas, do Recruta ao Especialista
+const HEALTH_PER_GAME = 5;     // 7 de cibersegurança + 5 de Outubro Rosa = 12 perguntas
 
 const RoomState = {
   roomCode: null,
@@ -56,6 +56,18 @@ function flattenScenarios(data) {
       out.push({ ...scenario, levelName: level.name, levelColor: level.color, levelIcon: level.icon });
     });
   });
+  // Outubro Rosa: cartas de mito/verdade e situações com botões próprios.
+  // A opção da esquerda (options[0]) ocupa o lugar do "GOLPE" na pontuação.
+  (data.health || []).forEach(card => {
+    const options = card.options || ['MITO', 'VERDADE'];
+    const answer = card.options ? card.answer : (card.isMyth ? 0 : 1);
+    out.push({
+      ...card, type: card.type || 'Saúde', kind: 'health', isScam: answer === 0,
+      options, answer, question: card.question || 'Mito ou verdade?',
+      revealLabel: options[answer], signals: card.facts,
+      levelName: 'Outubro Rosa',
+    });
+  });
   return out;
 }
 
@@ -68,18 +80,37 @@ function shuffle(arr) {
   return a;
 }
 
-// Monta a partida em ordem de dificuldade: 4 do Recruta, 4 do Investigador e
-// 4 do Especialista, sorteadas a cada sala. Cada nível tem 1 ou 2 legítimos,
-// pra resposta não virar "é sempre golpe".
-function pickQuestionSet(data, perLevel) {
+// Monta a partida: 7 cenários de cibersegurança (2 do Recruta, 3 do
+// Investigador e 2 do Especialista, em ordem de dificuldade) intercalados com
+// 5 cartas de Outubro Rosa. Sempre entra ao menos 1 golpe com o tema da
+// campanha, e cada lado tem respostas dos dois tipos, pra não virar
+// "é sempre golpe" ou "é sempre mito".
+function pickQuestionSet(data) {
   const pool = flattenScenarios(data);
+  const perLevel = [2, 3, 2];
+  const levels = data.levels.map(l => pool.filter(s => s.levelName === l.name));
+
+  let cyber;
+  for (let tries = 0; tries < 50; tries++) {
+    cyber = levels.flatMap((inLevel, i) => shuffle(inLevel).slice(0, perLevel[i]));
+    const nLegit = cyber.filter(s => !s.isScam).length;
+    if (cyber.some(s => s.theme === 'rosa') && nLegit >= 1 && nLegit <= 3) break;
+  }
+  // Saúde: 3 situações do dia a dia + 2 cartas de mito ou verdade.
+  const situations = pool.filter(s => s.kind === 'health' && s.type !== 'Saúde');
+  const cards      = pool.filter(s => s.kind === 'health' && s.type === 'Saúde');
+  let health;
+  for (let tries = 0; tries < 50; tries++) {
+    health = shuffle([...shuffle(situations).slice(0, 3), ...shuffle(cards).slice(0, HEALTH_PER_GAME - 3)]);
+    const nLeft = health.filter(s => s.isScam).length;
+    if (nLeft >= 2 && nLeft <= 3) break;
+  }
+
+  // C S C S C S C S C S C C
   const out = [];
-  data.levels.forEach(level => {
-    const inLevel = pool.filter(s => s.levelName === level.name);
-    const legit = shuffle(inLevel.filter(s => !s.isScam));
-    const scam  = shuffle(inLevel.filter(s => s.isScam));
-    const nLegit = Math.min(legit.length, 1 + Math.floor(Math.random() * 2));
-    out.push(...shuffle([...legit.slice(0, nLegit), ...scam.slice(0, perLevel - nLegit)]));
+  cyber.forEach((c, i) => {
+    out.push(c);
+    if (health[i]) out.push(health[i]);
   });
   return out;
 }
@@ -262,7 +293,7 @@ function showRegisterForRoom() {
 }
 
 async function createRoom() {
-  RoomState.questions = pickQuestionSet(gameData, QUESTIONS_PER_LEVEL);
+  RoomState.questions = pickQuestionSet(gameData);
 
   let code = generateRoomCode();
   while (await window._roomExists(code)) {
@@ -332,6 +363,14 @@ async function joinRoom(code) {
 async function tryResumeRoom() {
   const session = loadRoomSession();
   if (!session || !session.code || !backendReady()) return;
+  // Só volta direto pra sala se a partida estiver rolando agora (alguém
+  // recarregou no meio do jogo). Fora disso, abrir o jogo mostra a tela
+  // inicial e espera o clique em "Iniciar desafio".
+  const RESUME_WINDOW_MS = 15 * 60 * 1000;
+  const room = await window._getRoom(session.code).catch(() => null);
+  const live = room && (room.phase === 'question' || room.phase === 'reveal')
+    && Date.now() - (room.questionStartedAtMs || 0) < RESUME_WINDOW_MS;
+  if (!live) { sessionStorage.removeItem(SESSION_KEY); return; }
   RoomState.playerName = session.name || '';
   RoomState.playerArea = session.area || '';
   RoomState.playerId   = getOrCreatePlayerId();
@@ -516,12 +555,12 @@ function renderLobbyPlayers() {
 
   const btnStart = document.getElementById('btn-start-game');
   if (RoomState.isHost && btnStart) {
-    btnStart.disabled = RoomState.players.filter(p => !isHostPlayer(p)).length < 1;
+    btnStart.disabled = false; // o host pode iniciar sozinho (demonstração)
   }
 }
 
 function startGame() {
-  if (!RoomState.isHost || RoomState.players.filter(p => !isHostPlayer(p)).length < 1) return;
+  if (!RoomState.isHost) return;
   window._updateRoom(RoomState.roomCode, {
     phase: 'question',
     currentQuestionIndex: 0,
@@ -570,6 +609,7 @@ function showQuestion() {
 
     const btnGroup = document.getElementById('decision-buttons');
     btnGroup.style.display = 'flex';
+    setDecisionLabels(scenario);
 
     document.querySelectorAll('.decision-btn').forEach(btn => {
       btn.classList.remove('selected');
@@ -761,11 +801,28 @@ function showReveal() {
 function renderRevealExplanation(scenario) {
   const el = document.getElementById('reveal-explanation');
   const kind = scenario.isScam ? 'scam' : 'legit';
+  const health = scenario.kind === 'health';
+  const label = health
+    ? (scenario.type !== 'Saúde' ? 'Por quê' : scenario.isMyth ? 'Por que é mito' : 'Por que é verdade')
+    : (scenario.isScam ? 'Sinais de golpe' : 'Por que é seguro');
   const signals = (scenario.signals || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   el.innerHTML = `
     <p class="rv-summary">${escapeHtml(scenario.explanation || '')}</p>
-    ${signals ? `<div class="rv-label">${scenario.isScam ? 'Sinais de golpe' : 'Por que é seguro'}</div><ul class="rv-signals ${kind}">${signals}</ul>` : ''}
-    ${scenario.action ? `<div class="rv-action"><b>O que fazer:</b> ${escapeHtml(scenario.action)}</div>` : ''}`;
+    ${signals ? `<div class="rv-label">${label}</div><ul class="rv-signals ${kind}">${signals}</ul>` : ''}
+    ${scenario.action ? `<div class="rv-action"><b>O que fazer:</b> ${escapeHtml(scenario.action)}</div>` : ''}
+    ${scenario.bridge ? `<div class="rv-bridge">${RIBBON_SHIELD}<span>${escapeHtml(scenario.bridge)}</span></div>` : ''}`;
+}
+
+// Cibersegurança: GOLPE / LEGÍTIMO. Outubro Rosa: os botões da própria
+// pergunta (MITO / VERDADE, PROCURAR MÉDICO / PODE ESPERAR…).
+// data-decision continua "scam"/"legit", então a pontuação não muda.
+function setDecisionLabels(scenario) {
+  const health = scenario.kind === 'health';
+  const q = document.getElementById('decision-question');
+  q.textContent = health ? scenario.question : 'Isso é golpe ou legítimo?';
+  q.style.display = health ? 'none' : ''; // a pergunta já aparece no cenário
+  document.querySelector('.btn-scam .decision-text').textContent  = health ? scenario.options[0] : 'GOLPE';
+  document.querySelector('.btn-legit .decision-text').textContent = health ? scenario.options[1] : 'LEGÍTIMO';
 }
 
 function renderRevealList(answers) {
@@ -855,14 +912,14 @@ function renderPlayerFinalScreen() {
 
   let gradeClass, title, subtitle;
   if (pct >= 0.8) {
-    gradeClass = 'grade-gold'; title = 'MESTRE ANTI-GOLPE!';
-    subtitle = 'Impressionante! Você identificou os golpes com rapidez e precisão. Continue espalhando esse conhecimento!';
+    gradeClass = 'grade-gold'; title = 'OLHAR DE CUIDADO!';
+    subtitle = 'Impressionante! Você reconheceu os sinais com rapidez e precisão, na saúde e na segurança. Espalhe esse cuidado!';
   } else if (pct >= 0.6) {
-    gradeClass = 'grade-silver'; title = 'INVESTIGADOR AFIADO!';
-    subtitle = 'Muito bom! Você demonstrou grande habilidade para identificar tentativas de golpe rapidamente.';
+    gradeClass = 'grade-silver'; title = 'ATENÇÃO AFIADA!';
+    subtitle = 'Muito bom! Você percebeu a maioria dos sinais. Atenção aos sinais faz parte do cuidado.';
   } else {
-    gradeClass = 'grade-bronze'; title = 'EM FORMAÇÃO!';
-    subtitle = 'Você está no caminho certo! Continue treinando seus instintos digitais.';
+    gradeClass = 'grade-bronze'; title = 'CUIDADO EM FORMAÇÃO!';
+    subtitle = 'Você está no caminho certo! Cuidar também é prevenir: continue atento aos sinais.';
   }
 
   const medalConfig = {
@@ -889,8 +946,8 @@ function renderPlayerFinalScreen() {
         <circle cx="40" cy="82" r="24" fill="${medal.color}"/>
         <circle cx="40" cy="82" r="24" fill="url(#medal-shine)"/>
         <circle cx="40" cy="82" r="19" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
-        <text x="40" y="91" text-anchor="middle" font-size="22" font-weight="900" fill="rgba(0,0,0,0.4)" font-family="Orbitron,sans-serif">${medal.letter}</text>
-        <text x="40" y="90" text-anchor="middle" font-size="22" font-weight="900" fill="white" font-family="Orbitron,sans-serif">${medal.letter}</text>
+        <text x="40" y="91" text-anchor="middle" font-size="22" font-weight="900" fill="rgba(0,0,0,0.4)" font-family="Inter,sans-serif">${medal.letter}</text>
+        <text x="40" y="90" text-anchor="middle" font-size="22" font-weight="900" fill="white" font-family="Inter,sans-serif">${medal.letter}</text>
       </svg>
       <div class="medal-name" style="color:${medal.color}">${medal.name}</div>
     </div>`;

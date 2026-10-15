@@ -169,6 +169,48 @@ function transitionTo(showFn) {
   });
 }
 
+// ── TRAÇADOS DA TELA INICIAL ──────────────────
+// Cada peça lateral desliza para fora (esquerda/direita) em cascata; o conteúdo
+// central recua e some junto. Ao voltar para a tela inicial, fazem o caminho inverso.
+const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function splashMotion(leaving) {
+  const splash = document.getElementById('screen-splash');
+  if (!splash || reduceMotion() || !splash.animate) return Promise.resolve([]);
+  const anims = [];
+  splash.querySelectorAll('.splash-deco').forEach(deco => {
+    const dir = deco.classList.contains('splash-deco-left') ? -1 : 1;
+    deco.querySelectorAll('.deco-piece').forEach(piece => {
+      const order = Number(piece.dataset.order || 0);
+      const off = `translate(${dir * (420 + order * 60)}px, ${-dir * order * 14}px)`;
+      const frames = [{ transform: 'translate(0,0)', opacity: 1 }, { transform: off, opacity: 0 }];
+      anims.push(piece.animate(leaving ? frames : frames.reverse(), {
+        duration: leaving ? 620 : 900,
+        delay: (leaving ? order : 3 - order) * 70,
+        easing: leaving ? 'cubic-bezier(0.7, 0, 0.84, 0)' : 'cubic-bezier(0.16, 1, 0.3, 1)',
+        fill: 'both',
+      }));
+    });
+  });
+  const center = [splash.querySelector('.splash-content'), splash.querySelector('.splash-top')];
+  center.forEach((el, i) => {
+    if (!el) return;
+    const frames = [
+      { transform: 'none', opacity: 1, filter: 'blur(0)' },
+      { transform: i ? 'translateY(-16px)' : 'scale(0.96)', opacity: 0, filter: 'blur(6px)' },
+    ];
+    anims.push(el.animate(leaving ? frames : frames.reverse(), {
+      duration: leaving ? 480 : 700, delay: leaving ? 140 : 120,
+      easing: leaving ? 'cubic-bezier(0.4, 0, 1, 1)' : 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'both',
+    }));
+  });
+  return Promise.all(anims.map(a => a.finished)).then(() => {
+    // Ao entrar, libera o estado final; ao sair, mantém escondido até a tela trocar.
+    if (!leaving) anims.forEach(a => a.cancel());
+    return anims;
+  });
+}
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => {
     s.classList.remove('active');
@@ -176,6 +218,7 @@ function showScreen(id) {
   });
   const el = document.getElementById(id);
   if (el) {
+    if (id === 'screen-splash') splashMotion(false);
     el.style.display = 'flex';
     requestAnimationFrame(() => el.classList.add('active'));
     window.scrollTo(0, 0);
@@ -187,14 +230,19 @@ const svg = (paths, size = 18) =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
 
 // ── TYPE ICONS / LABELS ───────────────────────
+// Laço do Outubro Rosa (usado na carta de saúde e na revelação)
+const RIBBON_SVG = '<svg viewBox="0 0 64 96" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 92 L44 52 C52 38 50 22 40 14 C35 10 29 10 24 14 C14 22 12 38 20 52 L42 92"/></svg>';
+const RIBBON_SHIELD = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M10.2 17 L13.4 11.4 C14.4 9.6 14.1 8 12.9 7.3 C12.3 7 11.7 7 11.1 7.3 C9.9 8 9.6 9.6 10.6 11.4 L13.8 17"/></svg>';
+
 const typeConfig = {
-  'SMS':      { icon: svg('<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>'), label: 'SMS', color: '#7AC143' },
-  'WhatsApp': { icon: svg('<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>'), label: 'WhatsApp', color: '#9dd46a' },
+  'Saúde':    { icon: svg('<path d="M9.5 21 L14.5 12 C16.2 9 15.8 5.6 13.6 4.2 C12.6 3.6 11.4 3.6 10.4 4.2 C8.2 5.6 7.8 9 9.5 12 L14.5 21"/>'), label: 'Outubro Rosa', color: '#F2559B' },
+  'SMS':      { icon: svg('<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>'), label: 'SMS', color: '#F2559B' },
+  'WhatsApp': { icon: svg('<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>'), label: 'WhatsApp', color: '#FFB3D1' },
   'Email':    { icon: svg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/>'), label: 'E-mail', color: '#a1a1aa' },
-  'Ligação':  { icon: svg('<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013.6 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 9.91a16 16 0 006.08 6.08l1.97-1.97a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>'), label: 'Ligação', color: '#E71C35' },
-  'Site':     { icon: svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>'), label: 'Site / URL', color: '#f97316' },
-  'QR Code':  { icon: svg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="7" height="3"/>'), label: 'QR Code', color: '#f5a623' },
-  'LinkedIn': { icon: svg('<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>'), label: 'LinkedIn', color: '#5d9432' },
+  'Ligação':  { icon: svg('<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013.6 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 9.91a16 16 0 006.08 6.08l1.97-1.97a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>'), label: 'Ligação', color: '#E0115F' },
+  'Site':     { icon: svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>'), label: 'Site / URL', color: '#FF8DBA' },
+  'QR Code':  { icon: svg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="7" height="3"/>'), label: 'QR Code', color: '#FFB3D1' },
+  'LinkedIn': { icon: svg('<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>'), label: 'LinkedIn', color: '#B81E64' },
 };
 
 // ── BOTÃO DE SOM ──────────────────────────────
@@ -219,36 +267,35 @@ function initSoundToggle() {
   render();
 }
 
-// ── PARTICLES ─────────────────────────────────
-function spawnParticles() {
-  const container = document.getElementById('particles');
-  if (!container) return;
-  for (let i = 0; i < 28; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      width: ${Math.random() * 3 + 1}px;
-      height: ${Math.random() * 3 + 1}px;
-      animation-duration: ${Math.random() * 8 + 6}s;
-      animation-delay: ${Math.random() * 8}s;
-      opacity: ${Math.random() * 0.5 + 0.1};
-    `;
-    container.appendChild(p);
-  }
-}
-
 // ── SPLASH ────────────────────────────────────
 function initSplash() {
-  spawnParticles();
-  document.getElementById('btn-start').addEventListener('click', () => {
+  // Setas de voltar (escolha de modo e cadastro). Quem chegou pelo link da sala
+  // pulou a escolha de modo, então o cadastro volta direto para a tela inicial.
+  document.querySelectorAll('[data-back]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      Sound.click();
+      const to = btn.dataset.back;
+      if (to === 'mode-select' && !roomCodeFromUrl()) transitionTo(() => showModeSelect());
+      else transitionTo(() => showScreen('screen-splash'));
+    });
+  });
+
+  const btnStart = document.getElementById('btn-start');
+  btnStart.addEventListener('click', async () => {
+    if (btnStart.dataset.busy) return;
+    btnStart.dataset.busy = '1';
     Sound.start();
+    const leaving = await splashMotion(true);
+    // Cancela as animações no mesmo instante em que a tela troca: a splash já some
+    // sem piscar, e fica pronta (no lugar) para quando o jogador voltar.
+    leaving.forEach(a => a.cancel());
+    delete btnStart.dataset.busy;
     if (roomCodeFromUrl()) {
       // Veio pelo link da sala: vai direto pra tela de entrada com o código preenchido.
       RoomState.pendingMode = 'join';
-      transitionTo(() => showRegisterForRoom());
+      showRegisterForRoom();
     } else {
-      transitionTo(() => showModeSelect());
+      showModeSelect();
     }
   });
 }

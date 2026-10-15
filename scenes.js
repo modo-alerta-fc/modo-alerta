@@ -296,7 +296,19 @@ function renderLinkedIn(s) {
     </div>`;
 }
 
+// Carta de Outubro Rosa: uma afirmação para julgar como mito ou verdade.
+function renderHealth(s) {
+  return `
+    <div class="sc-health sc-anim">
+      <div class="sc-health-ribbon" aria-hidden="true">${RIBBON_SVG}</div>
+      <div class="sc-health-kicker">Mito ou verdade?</div>
+      <p class="sc-health-statement">“${escapeHtml(s.statement || '')}”</p>
+      <div class="sc-health-foot">Cuidar também é prevenir</div>
+    </div>`;
+}
+
 const RENDERERS = {
+  'Saúde': renderHealth,
   'SMS': renderSms, 'WhatsApp': renderWhatsApp, 'Email': renderEmail, 'Ligação': renderCall,
   'Site': renderSite, 'QR Code': renderQr, 'LinkedIn': renderLinkedIn,
 };
@@ -325,7 +337,8 @@ function renderScenarioFrame(scenario) {
 
   const levelEl = document.getElementById('scenario-level');
   if (levelEl) {
-    levelEl.textContent = scenario.levelName ? `Nível ${scenario.levelIcon || ''} · ${scenario.levelName}` : '';
+    levelEl.textContent = scenario.kind === 'health' ? 'Saúde · CIPA'
+      : scenario.levelName ? `Nível ${scenario.levelIcon || ''} · ${scenario.levelName}` : '';
     levelEl.style.color = scenario.levelColor || '';
     levelEl.style.borderColor = scenario.levelColor || '';
   }
@@ -337,6 +350,10 @@ function renderScenarioFrame(scenario) {
   const scene = document.getElementById('scene');
   const render = RENDERERS[scenario.type];
   scene.innerHTML = render ? render(scenario) : `<div class="sc-plain">${richText(scenario.content || '')}</div>`;
+  // Situação de saúde: a pergunta aparece embaixo da cena (também no telão do host).
+  if (scenario.kind === 'health' && scenario.type !== 'Saúde' && scenario.question) {
+    scene.insertAdjacentHTML('beforeend', `<div class="sc-health-ask">${RIBBON_SHIELD}<span>${escapeHtml(scenario.question)}</span></div>`);
+  }
   paintQrCodes(scene);
 }
 

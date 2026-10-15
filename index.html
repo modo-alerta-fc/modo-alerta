@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MODO ALERTA — Você consegue identificar um golpe?</title>
+  <title>MODO ALERTA · Cuidar também é prevenir</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230a0a0b' stroke='%23F2559B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='M10.2 17 L13.4 11.4 C14.4 9.6 14.1 8 12.9 7.3 C12.3 7 11.7 7 11.1 7.3 C9.9 8 9.6 9.6 10.6 11.4 L13.8 17'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=7">
-  <link rel="stylesheet" href="scenes.css?v=7">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="scenes.css?v=13">
 </head>
 <body>
 
@@ -15,39 +16,106 @@
   <div id="screen-splash" class="screen active">
     <div class="splash-bg">
       <div class="grid-overlay"></div>
-      <div class="particles" id="particles"></div>
     </div>
+
+    <!-- Traçados laterais: saem da tela ao iniciar (ver playSplashExit em game.js) -->
+    <svg class="splash-deco splash-deco-left" viewBox="0 0 500 1000" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="dg-green-l" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#F2559B" stop-opacity="0.04"/>
+          <stop offset="0.75" stop-color="#F2559B" stop-opacity="0.35"/>
+          <stop offset="1" stop-color="#FFB3D1" stop-opacity="0.95"/>
+        </linearGradient>
+        <filter id="dg-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g class="deco-piece" data-order="2">
+        <polygon points="0,228 118,228 172,284 172,402 0,582" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+      </g>
+      <g class="deco-piece" data-order="0">
+        <polygon points="0,150 126,282 126,372 0,504" fill="url(#dg-green-l)"/>
+        <polyline points="0,150 126,282 126,372 0,504" fill="none" stroke="#FF8DBA" stroke-width="5" stroke-linejoin="round" filter="url(#dg-glow)"/>
+      </g>
+      <g class="deco-piece" data-order="1">
+        <polygon points="0,680 70,680 380,1000 0,1000" fill="#111114"/>
+        <polyline points="0,680 70,680 380,1000" fill="none" stroke="#B81E64" stroke-width="2"/>
+      </g>
+      <g class="deco-piece" data-order="3">
+        <polyline points="270,893 385,893 495,1000" fill="none" stroke="#E0115F" stroke-width="2"/>
+      </g>
+    </svg>
+
+    <svg class="splash-deco splash-deco-right" viewBox="0 0 500 1000" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="dg-red-r" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#E0115F"/>
+          <stop offset="1" stop-color="#E0115F" stop-opacity="0.35"/>
+        </linearGradient>
+        <linearGradient id="dg-green-r" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#5a0f30"/>
+          <stop offset="1" stop-color="#F2559B"/>
+        </linearGradient>
+      </defs>
+      <g class="deco-piece" data-order="2">
+        <polygon points="500,70 270,330 270,1000 500,1000" fill="rgba(255,255,255,0.018)" stroke="rgba(255,255,255,0.05)" stroke-width="1.5"/>
+      </g>
+      <g class="deco-piece" data-order="3">
+        <line x1="300" y1="505" x2="500" y2="268" stroke="#E0115F" stroke-width="2"/>
+      </g>
+      <g class="deco-piece" data-order="0">
+        <polygon points="364,532 500,366 500,460 364,616" fill="url(#dg-red-r)" filter="url(#dg-glow)"/>
+      </g>
+      <g class="deco-piece" data-order="1">
+        <polygon points="500,650 430,748 330,758 150,1000 500,1000" fill="#111114" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+        <polygon points="384,826 442,826 300,1000 240,1000" fill="url(#dg-green-r)"/>
+      </g>
+    </svg>
+
+    <header class="splash-top">
+      <div class="splash-top-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M10.2 17 L13.4 11.4 C14.4 9.6 14.1 8 12.9 7.3 C12.3 7 11.7 7 11.1 7.3 C9.9 8 9.6 9.6 10.6 11.4 L13.8 17"/></svg>
+        <span><small>Outubro Rosa ×</small>Cibersegurança</span>
+      </div>
+      <div class="splash-top-tagline"><span>Cuidar também<br>é prevenir</span><i></i></div>
+    </header>
+
     <div class="splash-content">
       <div class="logo-wrapper">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="12" r="6"/>
-            <circle cx="12" cy="12" r="2"/>
-            <line x1="22" y1="12" x2="18" y2="12"/>
-            <line x1="6"  y1="12" x2="2"  y2="12"/>
-            <line x1="12" y1="2"  x2="12" y2="6"/>
-            <line x1="12" y1="18" x2="12" y2="22"/>
+        <div class="logo-emblem">
+          <svg class="logo-arc" viewBox="0 0 200 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="arc-g" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#F2559B" stop-opacity="0.9"/>
+                <stop offset="0.5" stop-color="#F2559B" stop-opacity="0.08"/>
+                <stop offset="1" stop-color="#F2559B" stop-opacity="0.55"/>
+              </linearGradient>
+            </defs>
+            <path d="M8 118 A92 92 0 0 1 192 118" fill="none" stroke="url(#arc-g)" stroke-width="2"/>
+            <path d="M22 118 A78 78 0 0 1 178 118" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
           </svg>
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M10.2 17 L13.4 11.4 C14.4 9.6 14.1 8 12.9 7.3 C12.3 7 11.7 7 11.1 7.3 C9.9 8 9.6 9.6 10.6 11.4 L13.8 17"/>
+            </svg>
+          </div>
         </div>
-        <h1 class="logo-title">MODO ALERTA</h1>
-        <p class="logo-subtitle">Você consegue identificar um golpe?</p>
+        <h1 class="logo-title"><span class="logo-title-a">MODO</span> <span class="logo-title-b">ALERTA</span></h1>
+        <p class="logo-subtitle">Atenção aos sinais faz parte do <span>cuidado</span></p>
       </div>
       <p class="splash-desc">
-        Teste seus instintos contra phishing, smishing, vishing e muito mais.<br>
-        12 situações reais por partida, em 3 níveis de dificuldade. Você consegue identificar todas?
+        Golpes digitais e mitos do Outubro Rosa.<br>
+        Quem percebe os sinais primeiro sobe no ranking.
       </p>
-      <button class="btn-primary btn-glow" id="btn-start">
-        <span>INICIAR MISSÃO</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <div class="splash-badges">
-        <div class="badge"><span class="badge-lvl">I</span> Recruta</div>
-        <div class="badge"><span class="badge-lvl">II</span> Investigador</div>
-        <div class="badge"><span class="badge-lvl">III</span> Especialista</div>
+      <div class="btn-start-wrap">
+        <button class="btn-primary btn-start-hero" id="btn-start">
+          <span>INICIAR DESAFIO</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
       </div>
       <div class="splash-brand">
-        <span class="brand-label">Uma iniciativa da equipe de Cibersegurança</span>
+        <span class="brand-label">Uma ação CIPA × Cibersegurança</span>
         <div class="brand-logos-row">
           <img src="Logonovaedu_web.png" alt="eduFC" class="brand-logo-edufc-img">
           <div class="brand-logos-divider"></div>
@@ -61,17 +129,29 @@
 
   <!-- TELA 1a: ESCOLHA DE MODO -->
   <div id="screen-mode-select" class="screen">
+    <button class="btn-back" type="button" data-back="splash" aria-label="Voltar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>VOLTAR</span>
+    </button>
     <div class="mode-select-content">
-      <h2 class="mode-select-title">MODO SALA</h2>
-      <p class="mode-select-desc">Jogue em grupo, em tempo real. Acertar é o que mais importa — e quem acerta mais rápido ganha pontos extras.</p>
+      <h2 class="mode-select-title">MODO <span>SALA</span></h2>
+      <p class="mode-select-desc">Jogue em grupo, em tempo real. Acertar é o que mais importa, e quem acerta mais rápido ganha pontos extras.</p>
       <div class="mode-select-buttons">
-        <button class="btn-primary btn-glow" id="btn-create-room">
-          <span>CRIAR SALA</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        <button class="mode-card mode-card-host" id="btn-create-room" type="button">
+          <span class="mode-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+          <span class="mode-card-text">
+            <span class="mode-card-title">CRIAR SALA</span>
+            <span class="mode-card-sub">Sou quem vai apresentar. Use no computador ou projetor.</span>
+          </span>
+          <svg class="mode-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
-        <button class="btn-secondary" id="btn-join-room">
-          <span>ENTRAR EM SALA</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <button class="mode-card mode-card-player" id="btn-join-room" type="button">
+          <span class="mode-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+          <span class="mode-card-text">
+            <span class="mode-card-title">ENTRAR EM SALA</span>
+            <span class="mode-card-sub">Sou jogador. Entro pelo celular com o código.</span>
+          </span>
+          <svg class="mode-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
@@ -79,6 +159,10 @@
 
   <!-- TELA 1b: CADASTRO -->
   <div id="screen-register" class="screen">
+    <button class="btn-back" type="button" data-back="mode-select" aria-label="Voltar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>VOLTAR</span>
+    </button>
     <div class="register-content">
       <div class="register-icon">
         <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -163,7 +247,7 @@
       <!-- DECISÃO -->
       <div class="decision-section">
         <div class="decision-step" id="step-decision">
-          <p class="step-label">Isso é golpe ou legítimo?</p>
+          <p class="step-label" id="decision-question">Isso é golpe ou legítimo?</p>
           <div class="decision-buttons" id="decision-buttons">
             <button class="decision-btn btn-scam" data-decision="scam">
               <span class="decision-icon">
@@ -434,10 +518,10 @@
     });
   </script>
 
-  <script src="supabase-config.js?v=7"></script>
-  <script src="data.js?v=7"></script>
-  <script src="game.js?v=7"></script>
-  <script src="scenes.js?v=7"></script>
-  <script src="room.js?v=7"></script>
+  <script src="supabase-config.js?v=13"></script>
+  <script src="data.js?v=13"></script>
+  <script src="game.js?v=13"></script>
+  <script src="scenes.js?v=13"></script>
+  <script src="room.js?v=13"></script>
 </body>
 </html>

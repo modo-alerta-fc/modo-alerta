@@ -15,14 +15,312 @@
    Campos por tipo: ver renderizadores em scenes.js.
    ═══════════════════════════════════════════════ */
 const gameData = {
+  /* ═══ OUTUBRO ROSA: cartas de MITO ou VERDADE ═══
+     Baseadas nas orientações públicas do INCA / Ministério da Saúde.
+     statement   afirmação mostrada na carta
+     isMyth      true = mito, false = verdade
+     facts       2 pontos que explicam a resposta
+     action      o que fazer na vida real
+     bridge      o paralelo com a cibersegurança ("atenção aos sinais
+                 faz parte do cuidado") */
+  health: [
+    {
+      id: 201, isMyth: true,
+      statement: "Só tem câncer de mama quem tem casos da doença na família.",
+      explanation: "Mito: a maioria dos casos acontece em pessoas sem histórico familiar.",
+      facts: [
+        "O histórico familiar aumenta o risco, mas não é a única causa",
+        "Por isso, todas as mulheres precisam ficar atentas aos sinais",
+      ],
+      action: "Conheça o seu corpo e mantenha os exames em dia, com ou sem casos na família.",
+      bridge: "Na cibersegurança também: achar que “comigo não acontece” é exatamente o que o golpista espera.",
+    },
+    {
+      id: 202, isMyth: false,
+      statement: "Homens também podem ter câncer de mama.",
+      explanation: "Verdade: é raro, cerca de 1% dos casos, mas acontece.",
+      facts: [
+        "Homens também têm tecido mamário",
+        "Nódulo ou alteração no peito também deve ser avaliado por um médico",
+      ],
+      action: "Notou alguma alteração no peito? Procure atendimento, seja homem ou mulher.",
+      bridge: "Na cibersegurança também: golpe não escolhe cargo nem área, todo mundo é alvo.",
+    },
+    {
+      id: 203, isMyth: true,
+      statement: "Todo nódulo (caroço) na mama é câncer.",
+      explanation: "Mito: a maior parte dos nódulos é benigna. Mas todo nódulo precisa ser avaliado.",
+      facts: [
+        "Só um profissional de saúde, com exames, confirma o que é",
+        "Investigar cedo traz tranquilidade ou um tratamento mais simples",
+      ],
+      action: "Percebeu um nódulo? Não entre em pânico nem ignore: procure atendimento.",
+      bridge: "Na cibersegurança também: nem todo alerta é ataque, mas todo alerta deve ser reportado.",
+    },
+    {
+      id: 204, isMyth: true,
+      statement: "Usar desodorante antitranspirante causa câncer de mama.",
+      explanation: "Mito: não há evidência científica de que desodorante cause câncer de mama.",
+      facts: [
+        "Essa informação circula há anos em correntes de mensagem",
+        "O INCA esclarece que essa relação não é comprovada",
+      ],
+      action: "Antes de repassar uma informação de saúde, confira em fontes oficiais.",
+      bridge: "Na cibersegurança também: corrente alarmante é um clássico das notícias falsas e dos golpes.",
+    },
+    {
+      id: 205, isMyth: false,
+      statement: "Atividade física e peso adequado ajudam a reduzir o risco de câncer de mama.",
+      explanation: "Verdade: hábitos saudáveis são uma das formas de prevenção.",
+      facts: [
+        "Evitar o excesso de peso, principalmente após a menopausa, reduz o risco",
+        "Evitar bebida alcoólica também ajuda",
+      ],
+      action: "Pequenas mudanças de rotina já contam: se movimentar, se alimentar bem e moderar o álcool.",
+      bridge: "Na cibersegurança também: bons hábitos diários, como senhas fortes e atualizações, previnem problemas.",
+    },
+    {
+      id: 206, isMyth: false,
+      statement: "Quando o câncer de mama é descoberto cedo, as chances de cura são maiores.",
+      explanation: "Verdade: o diagnóstico precoce aumenta muito as chances de um tratamento bem-sucedido.",
+      facts: [
+        "Tumores pequenos costumam exigir tratamentos menos agressivos",
+        "Por isso os exames e a atenção aos sinais são tão importantes",
+      ],
+      action: "Não adie consultas e exames recomendados pelo seu médico.",
+      bridge: "Na cibersegurança também: incidente reportado cedo causa muito menos estrago.",
+    },
+    {
+      id: 207, isMyth: false,
+      statement: "Pele da mama com aspecto de casca de laranja pode ser um sinal de alerta.",
+      explanation: "Verdade: é um dos sinais que devem ser avaliados por um profissional.",
+      facts: [
+        "Outros sinais: nódulo, vermelhidão, retração do mamilo ou saída de líquido",
+        "Caroços na axila ou no pescoço também merecem atenção",
+      ],
+      action: "Percebeu alguma mudança? Procure atendimento, sem esperar a próxima consulta de rotina.",
+      bridge: "Na cibersegurança também: perceber um sinal estranho e agir rápido faz a diferença.",
+    },
+    {
+      id: 208, isMyth: true,
+      statement: "Se eu me apalpo e não sinto nada, não preciso fazer mamografia.",
+      explanation: "Mito: o toque não substitui a mamografia, que encontra alterações ainda pequenas.",
+      facts: [
+        "A mamografia detecta lesões antes de serem sentidas pelo toque",
+        "Conhecer o corpo e fazer os exames se complementam",
+      ],
+      action: "Observe o seu corpo e siga a orientação médica sobre a mamografia.",
+      bridge: "Na cibersegurança também: a sua atenção não substitui as proteções da empresa, as duas se somam.",
+    },
+    {
+      id: 209, isMyth: true,
+      statement: "Sutiã com aro causa câncer de mama.",
+      explanation: "Mito: não há evidência de que o tipo de sutiã cause a doença.",
+      facts: [
+        "É outra informação falsa que circula em mensagens",
+        "Os fatores de risco conhecidos são outros, como idade, álcool e excesso de peso",
+      ],
+      action: "Na dúvida, consulte fontes oficiais como o INCA e o Ministério da Saúde.",
+      bridge: "Na cibersegurança também: desconfie de mensagens que espalham medo sem fonte.",
+    },
+    {
+      id: 210, isMyth: false,
+      statement: "Amamentar ajuda a proteger contra o câncer de mama.",
+      explanation: "Verdade: a amamentação é considerada um fator de proteção.",
+      facts: [
+        "Quanto mais tempo de amamentação, maior a proteção",
+        "Ela também traz benefícios para a saúde do bebê",
+      ],
+      action: "Busque informação e apoio no seu serviço de saúde.",
+      bridge: "Na cibersegurança também: proteção se constrói aos poucos, com atitudes do dia a dia.",
+    },
+    {
+      id: 211, isMyth: true,
+      statement: "Câncer de mama só aparece depois dos 50 anos.",
+      explanation: "Mito: o risco aumenta com a idade, mas a doença pode surgir em mulheres mais jovens.",
+      facts: [
+        "A maioria dos casos ocorre a partir dos 50 anos",
+        "Mas mulheres jovens também devem ficar atentas a qualquer alteração",
+      ],
+      action: "Em qualquer idade, notou uma mudança na mama? Procure atendimento.",
+      bridge: "Na cibersegurança também: não existe “perfil seguro”, a atenção vale para todo mundo.",
+    },
+    {
+      id: 212, isMyth: false,
+      statement: "Saída espontânea de líquido pelo mamilo deve ser avaliada por um médico.",
+      explanation: "Verdade: fora da amamentação, é um sinal que precisa ser investigado.",
+      facts: [
+        "Na maioria das vezes não é câncer, mas só a avaliação confirma",
+        "Vale para qualquer alteração que surgiu e não desaparece",
+      ],
+      action: "Procure atendimento e conte o que percebeu, mesmo que pareça pequeno.",
+      bridge: "Na cibersegurança também: o detalhe que “parece bobo” pode ser o sinal mais importante.",
+    },
+
+    /* ── Situações do dia a dia: mesma cara dos cenários de golpe, mas com
+       botões próprios. options[0] fica no botão da esquerda (o de alerta),
+       options[1] no da direita; answer = índice da resposta certa. ── */
+    {
+      id: 221, type: "WhatsApp", sender: "Júlia", saved: true, time: "21:14",
+      context: "Uma amiga te mandou esta mensagem:",
+      messages: [
+        { text: "Amiga, notei que a pele de um dos seios ficou meio repuxada pra dentro 😕" },
+        { text: "Mas não dói nada. Deve ser bobagem, né?" },
+      ],
+      question: "O que ela deve fazer?", options: ["PROCURAR MÉDICO", "PODE ESPERAR"], answer: 0,
+      explanation: "Procurar médico: pele retraída ou repuxada é um sinal de alerta, mesmo sem dor.",
+      facts: [
+        "A maioria dos sinais do câncer de mama não dói no início",
+        "Retração da pele ou do mamilo precisa ser avaliada",
+      ],
+      action: "Incentive a amiga a marcar uma consulta logo, sem esperar passar.",
+      bridge: "Na cibersegurança também: “não está acontecendo nada de errado” não significa que está tudo bem.",
+    },
+    {
+      id: 222, type: "WhatsApp", sender: "Família 💕", saved: true, group: true, members: "Tia Rosa, Marcos, você", time: "07:40",
+      context: "Chegou no grupo da família:",
+      messages: [
+        { author: "Tia Rosa", text: "URGENTE!!! Médicos confirmam: chá de casca de abacate CURA câncer de mama em 30 dias. A indústria esconde isso! Repassem para todas as mulheres!!! 🙏🙏" },
+      ],
+      question: "Essa informação é:", options: ["FAKE NEWS", "CONFIÁVEL"], answer: 0,
+      explanation: "Fake news: não existe chá que cure câncer, e a mensagem não tem fonte nenhuma.",
+      facts: [
+        "Promessa de cura milagrosa, “médicos” sem nome e pedido para repassar",
+        "Trocar o tratamento por receitas caseiras pode custar a vida",
+      ],
+      action: "Não repasse. Informação de saúde se confirma com o médico ou em fontes oficiais, como o INCA.",
+      bridge: "Na cibersegurança também: urgência, segredo revelado e “repasse para todos” são as marcas de um golpe.",
+    },
+    {
+      id: 223, type: "Site", url: "https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/mama",
+      context: "Você pesquisou sobre o assunto e abriu este site:",
+      brand: "INCA · Instituto Nacional de Câncer", pageTitle: "Câncer de mama",
+      body: "Conheça os sinais e sintomas, os fatores de risco e as formas de detecção precoce do câncer de mama. Na presença de alterações, procure avaliação médica.",
+      question: "Essa fonte é:", options: ["FAKE NEWS", "CONFIÁVEL"], answer: 1,
+      explanation: "Confiável: é o site oficial do Instituto Nacional de Câncer, no domínio gov.br.",
+      facts: [
+        "Endereço oficial do governo (gov.br)",
+        "Orienta procurar avaliação médica, sem prometer milagres",
+      ],
+      action: "Prefira fontes oficiais e converse com um profissional de saúde.",
+      bridge: "Na cibersegurança também: conferir o endereço do site é o primeiro passo para saber se é confiável.",
+    },
+    {
+      id: 224, type: "WhatsApp", sender: "Carol (Financeiro)", saved: true, time: "12:05",
+      context: "Uma colega comentou com você:",
+      messages: [
+        { text: "Todo mês, uns dias antes da menstruação, meus seios ficam inchados e doloridos. Depois que desce, passa." },
+        { text: "Isso é um sinal de alerta?" },
+      ],
+      question: "Isso costuma ser:", options: ["SINAL DE ALERTA", "COMUM"], answer: 1,
+      explanation: "Comum: dor e inchaço que vêm e vão com o ciclo menstrual costumam ser hormonais.",
+      facts: [
+        "Alterações ligadas ao ciclo menstrual são frequentes",
+        "Atenção se a dor não passar ou se surgir nódulo ou outra mudança",
+      ],
+      action: "Se algo mudar ou não passar, procure avaliação. E mantenha os exames de rotina em dia.",
+      bridge: "Na cibersegurança também: nem todo aviso é ataque. Conhecer o normal ajuda a perceber o diferente.",
+    },
+    {
+      id: 225, type: "WhatsApp", sender: "Pedro", saved: true, time: "18:22",
+      context: "Um colega te mandou:",
+      messages: [
+        { text: "Meu pai achou um caroço no peito, do lado do mamilo." },
+        { text: "Mas homem não tem câncer de mama, então nem precisa ir ao médico, né?" },
+      ],
+      question: "O que o pai dele deve fazer?", options: ["PROCURAR MÉDICO", "PODE ESPERAR"], answer: 0,
+      explanation: "Procurar médico: homens também podem ter câncer de mama, e todo nódulo deve ser avaliado.",
+      facts: [
+        "É raro em homens, cerca de 1% dos casos, mas acontece",
+        "Nos homens costuma ser descoberto mais tarde, justamente por esse mito",
+      ],
+      action: "Oriente a procurar atendimento o quanto antes.",
+      bridge: "Na cibersegurança também: achar que “isso não acontece comigo” é o que deixa a porta aberta.",
+    },
+    {
+      id: 226, type: "WhatsApp", sender: "Mãe ❤️", saved: true, time: "15:47",
+      context: "Sua mãe, de 56 anos, te mandou:",
+      messages: [
+        { text: "Filha, faz uns 3 anos que não faço mamografia." },
+        { text: "Mas não sinto nada, então deve estar tudo bem, né?" },
+      ],
+      question: "O que ela deve fazer?", options: ["PROCURAR MÉDICO", "PODE ESPERAR"], answer: 0,
+      explanation: "Procurar médico: a mamografia de rotina serve justamente para quem não sente nada.",
+      facts: [
+        "A mamografia encontra alterações antes de aparecerem sinais",
+        "Na faixa de 50 a 69 anos, a recomendação é a cada dois anos",
+      ],
+      action: "Ajude sua mãe a agendar a consulta e o exame.",
+      bridge: "Na cibersegurança também: prevenção é rotina, como atualizar o sistema mesmo quando está tudo funcionando.",
+    },
+    {
+      id: 227, type: "WhatsApp", sender: "Bia", saved: true, time: "10:30",
+      context: "Uma amiga te contou:",
+      messages: [
+        { text: "Achei um carocinho na axila há umas três semanas e ele não sumiu." },
+        { text: "Vou esperar mais um pouco pra ver se passa sozinho." },
+      ],
+      question: "O que ela deve fazer?", options: ["PROCURAR MÉDICO", "PODE ESPERAR"], answer: 0,
+      explanation: "Procurar médico: nódulo na axila que não some também é um sinal a ser avaliado.",
+      facts: [
+        "Caroços na axila ou no pescoço estão entre os sinais de alerta",
+        "Pode não ser nada grave, mas só a avaliação confirma",
+      ],
+      action: "Não espere “ver se passa”. Marque uma consulta.",
+      bridge: "Na cibersegurança também: esperar para ver se o problema some só dá mais tempo para ele crescer.",
+    },
+    {
+      id: 228, type: "WhatsApp", sender: "Lu", saved: true, time: "20:02",
+      context: "Uma amiga te perguntou:",
+      messages: [
+        { text: "Desde sempre um seio meu é um pouquinho maior que o outro. Nunca mudou." },
+        { text: "Isso é motivo de preocupação?" },
+      ],
+      question: "Isso costuma ser:", options: ["SINAL DE ALERTA", "COMUM"], answer: 1,
+      explanation: "Comum: uma pequena diferença de tamanho que sempre existiu é normal.",
+      facts: [
+        "Muitas mulheres têm mamas levemente diferentes",
+        "O sinal de atenção é a MUDANÇA: algo que surgiu ou se alterou",
+      ],
+      action: "Conheça o seu corpo: assim fica fácil perceber quando algo muda.",
+      bridge: "Na cibersegurança também: conhecer o comportamento normal é o que permite notar o estranho.",
+    },
+    {
+      id: 229, type: "Email", fromName: "Saúde Total News", fromAddress: "noticias@saude-total-news.com", time: "08:15",
+      context: "Você recebeu esta notícia por e-mail:",
+      subject: "ALERTA: guardar o celular no sutiã causa câncer, diz estudo",
+      body: "Um estudo secreto comprovou que guardar o celular no sutiã causa câncer de mama em poucos meses.\n\nOs médicos não querem que você saiba disso. Compartilhe com todas as mulheres que você ama!",
+      question: "Essa notícia é:", options: ["FAKE NEWS", "CONFIÁVEL"], answer: 0,
+      explanation: "Fake news: não há comprovação científica, e o texto usa medo e “estudo secreto” sem fonte.",
+      facts: [
+        "“Estudo secreto” e “os médicos não querem que você saiba” são sinais de boato",
+        "Pede para compartilhar, que é como o boato se espalha",
+      ],
+      action: "Não compartilhe. Confira em fontes oficiais antes de acreditar.",
+      bridge: "Na cibersegurança também: e-mail alarmista de remetente desconhecido merece desconfiança.",
+    },
+  ],
+
   levels: [
     {
       id: 1,
       name: "Recruta",
-      color: "#7AC143",
+      color: "#FFB3D1",
       icon: "I",
       description: "Situações comuns do dia a dia. Fique atento aos sinais óbvios!",
       scenarios: [
+        {
+          id: 131, type: "SMS", category: "Smishing · falsa mamografia", isScam: true, theme: "rosa",
+          sender: "+55 81 98457-3301", time: "10:48",
+          messages: ["Outubro Rosa: voce tem direito a 1 mamografia gratuita. Para garantir a vaga, confirme seu CPF e o numero do cartao em saude-rosa-agenda.com"],
+          explanation: "Golpe: usa uma campanha de saúde para pedir CPF e dados do cartão.",
+          signals: [
+            "Exame gratuito não pede número de cartão",
+            "Site desconhecido, fora dos canais oficiais de saúde",
+            "Mensagem de número de celular comum, sem identificação",
+          ],
+          action: "Não responda. Agende exames pela sua unidade de saúde, pelo plano ou pelo app oficial.",
+        },
         {
           id: 101, type: "SMS", category: "Smishing · prêmio falso", isScam: true,
           sender: "+55 11 97341-2290", time: "09:12",
@@ -166,10 +464,23 @@ const gameData = {
     {
       id: 2,
       name: "Investigador",
-      color: "#f5a623",
+      color: "#F2559B",
       icon: "II",
       description: "Os sinais ficam mais sutis. Preste atenção nos detalhes!",
       scenarios: [
+        {
+          id: 132, type: "Email", category: "Comunicado da CIPA", isScam: false, theme: "rosa",
+          fromName: "CIPA Ferreira Costa", fromAddress: "cipa@ferreiracosta.com.br", time: "09:05",
+          subject: "Outubro Rosa: roda de conversa na quinta",
+          body: "Olá!\n\nNa quinta, às 15h, teremos uma roda de conversa sobre prevenção do câncer de mama, no auditório.\n\nNão precisa de inscrição. Venha e traga suas dúvidas!",
+          explanation: "Legítimo: convite informativo, do domínio oficial, sem link nem pedido de dados.",
+          signals: [
+            "Remetente no domínio oficial da empresa",
+            "Só informa data e local, sem link para clicar",
+            "Não pede nenhum dado pessoal",
+          ],
+          action: "Pode participar! Na dúvida sobre qualquer comunicado, confirme com a CIPA.",
+        },
         {
           id: 111, type: "Email", category: "Phishing · domínio falso", isScam: true,
           context: "No seu e-mail pessoal, numa manhã comum:",
@@ -321,10 +632,25 @@ const gameData = {
     {
       id: 3,
       name: "Especialista",
-      color: "#E71C35",
+      color: "#E0115F",
       icon: "III",
       description: "Golpes sofisticados. Só os mais atentos identificam!",
       scenarios: [
+        {
+          id: 133, type: "WhatsApp", category: "Golpe · falsa doação", isScam: true, theme: "rosa",
+          sender: "+55 11 97720-5814", saved: false, time: "19:32",
+          messages: [
+            { text: "Oi! Sou voluntária da campanha Outubro Rosa 💗 Estamos arrecadando para exames de mulheres sem plano de saúde." },
+            { text: "Qualquer valor ajuda! Faz um Pix pra minha chave pessoal: 11977205814. Hoje é o último dia 🙏" },
+          ],
+          explanation: "Golpe: usa uma causa nobre e a pressa para pedir Pix numa chave pessoal.",
+          signals: [
+            "Número desconhecido falando em nome de uma campanha",
+            "Pix para chave de pessoa física, não de uma instituição",
+            "“Último dia”: pressa para você não checar",
+          ],
+          action: "Não transfira. Para doar, procure diretamente instituições conhecidas, pelos canais oficiais delas.",
+        },
         {
           id: 121, type: "Email", category: "Phishing · domínio parecido", isScam: true,
           fromName: "RH Ferreira Costa", fromAddress: "rh@ferreiracosta.corn.br", time: "10:05",
